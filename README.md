@@ -10,9 +10,13 @@ In Linux cd to the project root and type `make`. This produces a binary file: `.
 
 The `make` command here is used to execute `cmake`. Run `make --dry-run` to see what it does.
 
+The problem with using `make` this way, however, is that no arguments are passed to the execution of the CMake generated Makefile. Therefore compiler flags are managed in the CMake file 
+
+This project has launch and build configs for vscode([-dium](https://github.com/VSCodium/vscodium)). So you can use the build menu (`ctrl+shift+b`) for a GUI experience.
+
 ### Dependencies
 
-Requires OpenCL and optionally OpenCV (toggle the `#USE_OPENCV_STUFF` flag). If using OpenCV an image will print demonstrating the algorithm.
+Requires OpenCL and optionally OpenCV (toggle the `#USE_OPENCV_STUFF` flag in the CMake file). If using OpenCV an image will print demonstrating the algorithm.
 
 To install the dependencies, Aptitude can be used on debian and debian-derivative operating systems (e.g. Ubuntu and family).
 

@@ -13,11 +13,13 @@ endif()
 # Set the project name
 project(${PROJ_NAME})
 
+# Find our libraries
 find_package(OpenCL REQUIRED)
 find_package(OpenCV REQUIRED)
 
+add_compile_definitions(USE_OPENCV_STUFF=1)
+
 # Give directories where header files are located
-# Technically not needed as we are an executable application and main links to everything we need for us
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
 )
@@ -31,8 +33,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenCL::OpenCL)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
 
-# Use c++ 23 if supported
-set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 23)
+# Use c++ 20 since that's what ubuntu's GCC allows
+set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 20)
 
 # Copy our kernels into the build dir
 # See https://stackoverflow.com/a/2178327 & https://cmake.org/cmake/help/latest/command/file.html#copy
@@ -40,4 +42,4 @@ set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 23)
 #         Relative input paths are evaluated with respect to the current source directory,
 #         and a relative destination is evaluated with respect to the current build directory
 # NOTE: This command does NOT delete files. Execute clean if removing files from source "./kernels"
-file(INSTALL kernels DESTINATION .)
+file(INSTALL kernels DESTINATION .) # FOLLOW_SYMLINK_CHAIN is an option i
