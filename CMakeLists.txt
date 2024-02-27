@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(PROJ_NAME <PROJECT_NAME>)
+set(PROJ_NAME xoshiro-opencl)
 
 # Set the compiler flags
 # Wno-reorder disables the reorder warning
@@ -12,6 +12,9 @@ endif()
 
 # Set the project name
 project(${PROJ_NAME})
+
+find_package(OpenCL REQUIRED)
+find_package(OpenCV REQUIRED)
 
 # Give directories where header files are located
 # Technically not needed as we are an executable application and main links to everything we need for us
@@ -25,5 +28,16 @@ add_executable(${PROJ_NAME} main.cpp)
 # Inlcude source files from the src dir
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenCL::OpenCL)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
+
 # Use c++ 23 if supported
 set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 23)
+
+# Copy our kernels into the build dir
+# See https://stackoverflow.com/a/2178327 & https://cmake.org/cmake/help/latest/command/file.html#copy
+#     Particularly:
+#         Relative input paths are evaluated with respect to the current source directory,
+#         and a relative destination is evaluated with respect to the current build directory
+# NOTE: This command does NOT delete files. Execute clean if removing files from source "./kernels"
+file(INSTALL kernels DESTINATION .)

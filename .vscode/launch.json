@@ -8,7 +8,7 @@
             "name": "debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/build/debug/<PROJECT_NAME>",
+            "program": "${workspaceRoot}/build/debug/xoshiro-opencl",
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "build-debug"
         }

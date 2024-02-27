@@ -14,7 +14,7 @@ using std::cout, std::cin, std::endl;
  */
 int main(int argc, char *argv[])
 {
-	cout << "Hello, world!! I'm <PROJECT_NAME> :)" << endl;
+	cout << "Hello, world!! I'm xoshiro-opencl :)" << endl;
 	
 	return 0;
 }
