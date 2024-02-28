@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
 {
 	cout << "Hello, world!! I'm xoshiro-opencl :)" << endl;
 
+
+
 	#if USE_OPENCV_STUFF
 		
 	#endif

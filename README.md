@@ -22,4 +22,4 @@ To install the dependencies, Aptitude can be used on debian and debian-derivativ
 
 There is an issue with my Ubuntu-derivative system and OpenCV where `/usr/include/opencv4/opencv2/...` headers include `#include "opencv2/<stuff>.hpp"` which GCC doesn't like. To fix this I used a symbolic link (i.e. `/usr/include/opencv2`).
 
-OpenCL can also be compiled from source quite easily! See [Khronos Group's OpenCL Guide](https://github.com/KhronosGroup/OpenCL-Guide/blob/main/chapters/getting_started_linux.md) for more details.
+The OpenCL SDK can also be compiled from source quite easily! See [Khronos Group's OpenCL Guide](https://github.com/KhronosGroup/OpenCL-Guide/blob/main/chapters/getting_started_linux.md) for more details.

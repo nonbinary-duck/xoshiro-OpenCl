@@ -70,13 +70,12 @@ namespace utils
         // Remove the newline character
         s.pop_back();
         
-        // Append the timezone
-#ifdef _MSVC_LANG
-        // It should be UTC, I don't see a workaround for Windows
-        return s + " UTC";
-#else
-        return s + " " + time.tm_zone;
-#endif
+        // Append the timezone if we're not using MSVC
+        #ifdef _MSVC_LANG
+            return s;
+        #else
+            return s + " " + time.tm_zone;
+        #endif
     }
     
 } // End namespace utils
