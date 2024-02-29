@@ -7,6 +7,18 @@
 using std::cout, std::cin, std::endl;
 
 
+constexpr char FILE_test_kernel[] = {
+	#embed "kernels/test_kernel.cl" if_empty('N', 'O', '\x15', '\x04') // If the file is empty use negative ack & end of transmission
+};
+
+constexpr char FILE_xoshiro256stst[] = {
+	#embed "kernels/xoshiro256**.cl" if_empty('N', 'O', '\x15', '\x04')
+};
+
+// Get the compiler to check that we found a file
+static_assert(FILE_test_kernel != "NO\x15\x04");
+static_assert(FILE_test_kernel != "NO\x15\x04");
+
 #define CL_HPP_ENABLE_EXCEPTIONS
 #define CL_HPP_TARGET_OPENCL_VERSION 200
 

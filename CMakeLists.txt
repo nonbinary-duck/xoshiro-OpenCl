@@ -34,8 +34,10 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenCL::OpenCL)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
 
-# Use c++ 23 because we want the #embed directorate
+# Use c++ 23 because it's cool
 set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 23)
+# Use C23 because we use embed
+set_property(TARGET ${PROJ_NAME} PROPERTY C_STANDARD   23)
 # We need c++23 as a minimum
 set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
