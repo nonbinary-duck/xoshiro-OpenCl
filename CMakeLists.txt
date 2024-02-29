@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.12)
+# Barrier to entry being CXX_STANDARD C++23, otherwise 3.12 works
+cmake_minimum_required(VERSION 3.20)
 
 set(PROJ_NAME xoshiro-opencl)
 
@@ -33,8 +34,10 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenCL::OpenCL)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
 
-# Use c++ 20 since that's what ubuntu's GCC allows
-set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 20)
+# Use c++ 23 because we want the #embed directorate
+set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 23)
+# We need c++23 as a minimum
+set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # Copy our kernels into the build dir
 # See https://stackoverflow.com/a/2178327 & https://cmake.org/cmake/help/latest/command/file.html#copy

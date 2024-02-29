@@ -42,7 +42,13 @@ void xoshiro256stst_jump(ulong4 *s);
 static inline ulong4 xoshiro256stst_init(const ulong seed)
 {
 	// Initalise a simple state
-	ulong4 state = (ulong4)(seed, seed, seed, seed);
+	ulong4 state = (ulong4)(
+		seed ^ 0x45df1f30916742f0,
+		seed ^ 0xcefa4b36bd2f909f,
+		seed ^ 0xff258602b296dd1d,
+		seed ^ 0x02ec31fb65555974
+	);
+	
 	// Progress it
 	xoshiro256stst_jump(&state);
 	
@@ -198,6 +204,7 @@ inline void xoshiro256stst_long_jump(ulong4 *s)
 		{
 			if (LONG_JUMP[i] & UINT64_C(1) << b)
 			{
+				// Advance the state sNew by s
 				sNew ^= *s;
 				// s0 ^= s->x;
 				// s1 ^= s->y;
@@ -205,7 +212,8 @@ inline void xoshiro256stst_long_jump(ulong4 *s)
 				// s3 ^= s->w;
 			}
 
-			xoshiro256stst_next(s);	
+			// Advance the state s
+			xoshiro256stst_next(s);
 		}
 	}
 		
