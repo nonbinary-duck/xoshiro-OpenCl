@@ -1,6 +1,7 @@
-#pragma once
 #ifndef H_360679_SRC_UTILS
 #define H_360679_SRC_UTILS 1
+#pragma once
+
 
 #include <string>
 #include <chrono>
