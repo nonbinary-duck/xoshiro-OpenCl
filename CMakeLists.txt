@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.20)
 
 # Set our project name
 set(PROJ_NAME xoshiro-opencl)
+# Set the project name
+project(${PROJ_NAME})
 
 # Set the compiler flags
 # Wno-reorder disables the reorder warning
@@ -17,16 +19,22 @@ endif()
 # See https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html for details
 # CLang has a similar system
 # Also allow the user to entirely dissable these optimisation flags
-if( (CMAKE_CXX_COMPILER_ID == "GNU" OR CMAKE_CXX_COMPILER_ID == "Clang") AND (NOT NO_OPTIMISATION) )
+if( (CMAKE_CXX_COMPILER_ID EQUAL "GNU" OR CMAKE_CXX_COMPILER_ID EQUAL "Clang") AND (NOT DEFINED NO_OPTIMISATION) )
 
-    if(CMAKE_BUILD_TYPE == "Debug")
+    # If this is a debug build
+    if(CMAKE_BUILD_TYPE EQUAL "Debug")
         # "Optimise debugging experience"
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Og")
         message(NOTICE "Using debug optimisation flags")
+    
+    # If this is not a debug build
     else()
-        if(NOT AVOID_AGRESSIVE_OPTIMISATION)
+
+        # Check if we wanna avoid agressive optimisation
+        if(NOT DEFINED AVOID_AGRESSIVE_OPTIMISATION)
             # Agressive optimisation
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+            # T
             message(NOTICE "Using agressive optimisation flags\nTry AVOID_AGRESSIVE_OPTIMISATION=1 if debug build works and release fails")
         else()
             # Use less agressive optimisation
@@ -36,14 +44,16 @@ if( (CMAKE_CXX_COMPILER_ID == "GNU" OR CMAKE_CXX_COMPILER_ID == "Clang") AND (NO
     endif()
 else()
     # Throw a warning if the user isn't using GCC or Clang
-    message(WARNING "You are not copiling with GCC or Clang.")
-    message(WARNING "${CMAKE_C_COMPILER_ID}")
+    if (NOT DEFINED NO_OPTIMISATION)
+        if(CMAKE_CXX_COMPILER_ID  "GNU" OR CMAKE_CXX_COMPILER_ID == "Clang")
+            message(NOTICE "Using GNU or CLang")
+        endif()
+        message(WARNING "You are not copiling with GCC or Clang.")
+    else()
+        message(NOTICE "Not passing optimisation flags")
+    endif()
 endif()
 
-
-
-# Set the project name
-project(${PROJ_NAME})
 
 # Find our libraries
 find_package(OpenCL REQUIRED)
