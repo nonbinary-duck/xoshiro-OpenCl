@@ -1,0 +1,3 @@
+[submodule "gsubmods/incbin"]
+	path = gsubmods/incbin
+	url = git@github.com:graphitemaster/incbin.git

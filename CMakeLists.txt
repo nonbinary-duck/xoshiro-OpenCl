@@ -19,13 +19,13 @@ endif()
 # See https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html for details
 # CLang has a similar system
 # Also allow the user to entirely dissable these optimisation flags
-if( (CMAKE_CXX_COMPILER_ID EQUAL "GNU" OR CMAKE_CXX_COMPILER_ID EQUAL "Clang") AND (NOT DEFINED NO_OPTIMISATION) )
+if( (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (NOT DEFINED NO_OPTIMISATION) )
 
     # If this is a debug build
-    if(CMAKE_BUILD_TYPE EQUAL "Debug")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         # "Optimise debugging experience"
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Og")
-        message(NOTICE "Using debug optimisation flags")
+        message(NOTICE "== Using debug optimisation flags")
     
     # If this is not a debug build
     else()
@@ -35,23 +35,22 @@ if( (CMAKE_CXX_COMPILER_ID EQUAL "GNU" OR CMAKE_CXX_COMPILER_ID EQUAL "Clang") A
             # Agressive optimisation
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
             # T
-            message(NOTICE "Using agressive optimisation flags\nTry AVOID_AGRESSIVE_OPTIMISATION=1 if debug build works and release fails")
+            message(NOTICE "== Using agressive optimisation flags\n    == Try AVOID_AGRESSIVE_OPTIMISATION=1 if debug build works and release fails")
         else()
             # Use less agressive optimisation
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
-            message(NOTICE "Using O2 optimisation flags\nTry NO_OPTIMISATION=1 if debug build works and release fails")
+            message(NOTICE "== Using O2 optimisation flags\n    == Try NO_OPTIMISATION=1 if debug build works and release fails")
         endif()
     endif()
 else()
-    # Throw a warning if the user isn't using GCC or Clang
-    if (NOT DEFINED NO_OPTIMISATION)
-        if(CMAKE_CXX_COMPILER_ID  "GNU" OR CMAKE_CXX_COMPILER_ID == "Clang")
-            message(NOTICE "Using GNU or CLang")
-        endif()
-        message(WARNING "You are not copiling with GCC or Clang.")
+    # Let the user know we're not passing optimisation flags
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        message(NOTICE "== Using GCC or CLang without optimisation flags")
     else()
-        message(NOTICE "Not passing optimisation flags")
+        # Throw a warning if the user isn't using GCC or Clang
+        message(WARNING "== You are not compiling with GCC or Clang.")
     endif()
+
 endif()
 
 
