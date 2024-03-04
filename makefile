@@ -18,3 +18,7 @@ fresh-release: clean release
 # Optionally clean up after the last build
 clean:
 	if [ -d "./build" ]; then rm -r ./build; fi
+
+# Copy our template config
+make-config:
+	

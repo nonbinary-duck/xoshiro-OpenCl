@@ -5,28 +5,18 @@
 #include <memory>
 
 
+// 
 #define INCBIN_PREFIX gFile_
 #include "gsubmods/incbin/incbin.h"
 
 using std::cout, std::cin, std::endl;
 
-
-// constexpr char FILE_test_kernel[] = {
-// 	#embed "kernels/test_kernel.cl" if_empty('N', 'O', '\x15', '\x04') // If the file is empty use negative ack & end of transmission
-// };
-
-// constexpr char FILE_xoshiro256stst[] = {
-// 	#embed "kernels/xoshiro256**.cl" if_empty('N', 'O', '\x15', '\x04')
-// };
-
-// Get the compiler to check that we found a file
-// static_assert(FILE_test_kernel != "NO\x15\x04");
-// static_assert(FILE_test_kernel != "NO\x15\x04");
+#include "src/utils.hpp"
 
 
-// Use 
+// Use incbin to include 
 INCTXT(test_kernel, "./resources/kernels/test_kernel.cl");
-INCBIN(xoshiro_kernel, "./resources/kernels/xoshiro256**.cl");
+INCTXT(xoshiro_kernel, "./resources/kernels/xoshiro256**.cl");
 
 #define CL_HPP_ENABLE_EXCEPTIONS
 #define CL_HPP_TARGET_OPENCL_VERSION 200
@@ -113,10 +103,12 @@ int main(int argc, char *argv[])
 	programStrings.push_back(kernel1);
 
 	cl::Program vectorAddProgram(programStrings);
-	try {
+	try
+	{
 		vectorAddProgram.build("-cl-std=CL2.0");
 	}
-	catch (...) {
+	catch (...)
+	{
 		// Print build info for all devices
 		cl_int buildErr = CL_SUCCESS;
 		auto buildInfo = vectorAddProgram.getBuildInfo<CL_PROGRAM_BUILD_LOG>(&buildErr);

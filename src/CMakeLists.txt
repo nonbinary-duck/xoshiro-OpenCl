@@ -1,5 +1,5 @@
-# target_sources(${PROJ_NAME} PRIVATE
-#     example.cpp
-# )
+target_sources(${PROJ_NAME} PRIVATE
+    utils.hpp
+)
 
 # add_subdirectory(exampleDir)

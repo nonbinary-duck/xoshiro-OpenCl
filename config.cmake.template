@@ -1,0 +1,7 @@
+# A file in which configurations can be applied
+# This file gets loaded by CMakeLists.txt
+# This is a template file which lists all avaialbe options and default values
+# Make a copy of this file and edit that, which is ignored by Git
+# Note that this is technically ACE and not a config file as CMake will execute the content of this file
+
+set()
