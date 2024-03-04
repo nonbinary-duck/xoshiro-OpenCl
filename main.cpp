@@ -4,6 +4,10 @@
 #include <vector>
 #include <memory>
 
+
+#define INCBIN_PREFIX gFile_
+#include "gsubmods/incbin/incbin.h"
+
 using std::cout, std::cin, std::endl;
 
 
@@ -18,6 +22,11 @@ using std::cout, std::cin, std::endl;
 // Get the compiler to check that we found a file
 // static_assert(FILE_test_kernel != "NO\x15\x04");
 // static_assert(FILE_test_kernel != "NO\x15\x04");
+
+
+// Use 
+INCTXT(test_kernel, "./resources/kernels/test_kernel.cl");
+INCBIN(xoshiro_kernel, "./resources/kernels/xoshiro256**.cl");
 
 #define CL_HPP_ENABLE_EXCEPTIONS
 #define CL_HPP_TARGET_OPENCL_VERSION 200
@@ -42,6 +51,8 @@ const int numElements = 32;
 int main(int argc, char *argv[])
 {
 	cout << "Hello, world!! I'm xoshiro-opencl :)" << endl;
+
+	cout << gFile_test_kernelData << endl;
 
 	// Much of this is code is taken from the example in CL/opencl.hpp
 	// Filter for a 2.0 or newer platform and set it as the default

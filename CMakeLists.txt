@@ -58,7 +58,9 @@ endif()
 find_package(OpenCL REQUIRED)
 find_package(OpenCV REQUIRED)
 
+# Pass preprocessor definitions
 add_compile_definitions(USE_OPENCV_STUFF=1)
+add_compile_definitions(PROJECT_ROOT="${PROJECT_SOURCE_DIR}")
 
 # Give directories where header files are located
 include_directories(
@@ -91,7 +93,7 @@ set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 #         Relative input paths are evaluated with respect to the current source directory,
 #         and a relative destination is evaluated with respect to the current build directory
 # NOTE: This command does NOT delete files. Execute clean if removing files from source "./kernels"
-# file(INSTALL kernels DESTINATION .) # FOLLOW_SYMLINK_CHAIN is an option i
+file(INSTALL src/kernels DESTINATION resources/.) # FOLLOW_SYMLINK_CHAIN is an option i
 
 # So, we could indeed use this ⬆ and expect that directory to be moved around with the binary executable,
 # but instead we include the files in the binary executable
