@@ -2,6 +2,10 @@
 
 build
 
+# Don't inclue the user's build config file, only the defaults in the template
+config.cmake
+
+
 # Misc
 
 .~lock*

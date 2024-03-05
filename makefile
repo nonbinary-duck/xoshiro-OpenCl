@@ -1,3 +1,7 @@
+# We use bash here
+SHELL := /bin/bash
+
+
 # Default option
 release:
     # Make the build dir and cd into it, then execute cmake \
@@ -20,5 +24,13 @@ clean:
 	if [ -d "./build" ]; then rm -r ./build; fi
 
 # Copy our template config
+# Define the comands to do this so we don't have to use loads of escapes
+define make-config-cmds
+	if [ ! -e "./config.cmake" ]; then
+		cp config.cmake.template config.cmake;
+	else
+		echo "Config file already exists, will not create";
+	fi
+endef
 make-config:
-	
+	${make-config-cmds}
