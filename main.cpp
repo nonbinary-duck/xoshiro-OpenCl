@@ -14,9 +14,9 @@ using std::cout, std::cin, std::endl;
 #include "src/utils.hpp"
 
 
-// Use incbin to include 
-INCTXT(test_kernel, "./resources/kernels/test_kernel.cl");
-INCTXT(xoshiro_kernel, "./resources/kernels/xoshiro256**.cl");
+// Use incbin to include our kernel files in our binary
+INCTXT(test_kernel, "./build_resources/kernels/test_kernel.cl");
+INCTXT(xoshiro_kernel, "./build_resources/kernels/xoshiro256**.cl");
 
 #define CL_HPP_ENABLE_EXCEPTIONS
 #define CL_HPP_TARGET_OPENCL_VERSION 200

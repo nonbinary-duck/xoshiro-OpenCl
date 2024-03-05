@@ -1,11 +1,13 @@
 # Build output
-
 build
 
-# Don't inclue the user's build config file, only the defaults in the template
+# Don't inclue the user's build config file, only the global config
 config.cmake
 
 
+#
 # Misc
+#
 
+# Libre office lock files
 .~lock*

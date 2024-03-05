@@ -98,8 +98,7 @@ set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # Copy our kernels into the build dir
 # So this here isn't a part of the artefact, but instead something that GCC needs to compile our artefact
-# Which is hopefully signified by using the "resources" directory which in my mind implies "build resources"
 # The binary therefore does not need our kerenl or resource directories
 # These files are copied only because I couldn't figure out a nice way of getting incbin to recognise the project directory and not the build directory
 # NOTE: This command does NOT delete files. Always execute clean if removing files from source "./kernels" to avoid annoyance
-file(INSTALL src/kernels DESTINATION resources/.) # FOLLOW_SYMLINK_CHAIN is an option i
+file(INSTALL src/kernels DESTINATION build_resources/.) # FOLLOW_SYMLINK_CHAIN is an option i
