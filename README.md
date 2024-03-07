@@ -10,7 +10,7 @@ In Linux cd to the project root and type `make`. This produces a binary file: `.
 
 The `make` command here is used to execute `cmake`. Run `make --dry-run` to see what it does.
 
-The problem with using `make` this way, however, is that no arguments are passed to the execution of the CMake generated Makefile. Therefore compiler flags are managed in the CMake file 
+The problem with using `make` this way, however, is that no arguments are passed to the execution of the CMake generated Makefile. Therefore compiler flags and miscellaneous arguments can be passed through a local config file. To create a local config file do `make config-make`. For help see `make help` (TODO).
 
 This project has launch and build configs for vscode([-dium](https://github.com/VSCodium/vscodium)). So you can use the build menu (`ctrl+shift+b`) for a GUI experience.
 
