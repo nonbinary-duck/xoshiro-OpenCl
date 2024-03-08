@@ -1,8 +1,8 @@
 # Build output
 build
 
-# Don't inclue the user's build config file, only the global config
-config.cmake
+# Don't inclue the user's local build config file, only the global config
+config_local.cmake
 
 
 #

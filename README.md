@@ -18,7 +18,7 @@ This project has launch and build configs for vscode([-dium](https://github.com/
 
 ### Dependencies
 
-Requires OpenCL and optionally OpenCV (toggle the `#USE_OPENCV_STUFF` flag in the CMake file). If using OpenCV an image will print demonstrating the algorithm.
+Requires OpenCL and optionally OpenCV (toggle the `#USE_OPENCV_STUFF` flag in your local config). If using OpenCV an image will print demonstrating the algorithm.
 
 To install the dependencies, Aptitude can be used on debian and debian-derivative operating systems (e.g. Ubuntu and family).
 

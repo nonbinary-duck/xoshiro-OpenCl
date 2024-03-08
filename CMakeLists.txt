@@ -17,13 +17,19 @@ endif()
 
 # Here we do something perhaps non-standard
 # We include a file not tracked by Git if it exists which is our config
+include(config_global.cmake)
+# Then override the global config by anything included in the optional local config
+# In CMAKE 3.29 there is the optoin IS_READABLE which is better
+if(EXISTS )
+include(config_local.cmake OPTIONAL)
+
 
 
 # Set some optimisation flags
 # See https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html for details
 # CLang has a similar system
 # Also allow the user to entirely dissable these optimisation flags
-if( (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (NOT DEFINED NO_OPTIMISATION) )
+if( (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang") AND (NOT NO_OPTIMISATION) )
 
     # If this is a debug build
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -35,7 +41,7 @@ if( (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Cla
     else()
 
         # Check if we wanna avoid agressive optimisation
-        if(NOT DEFINED AVOID_AGRESSIVE_OPTIMISATION)
+        if(NOT AVOID_AGRESSIVE_OPTIMISATION)
             # Agressive optimisation
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
             # Tell the user
@@ -63,10 +69,20 @@ endif()
 
 # Find our libraries
 find_package(OpenCL REQUIRED)
-find_package(OpenCV REQUIRED)
 
-# Pass preprocessor definitions
-add_compile_definitions(USE_OPENCV_STUFF=1)
+
+# If we're using OpenCV
+if(USE_OPENCV_STUFF)
+    message(NOTICE "== Using OpenCV \"stuff\"")
+    
+    # Find that library
+    find_package(OpenCV REQUIRED)
+    
+    # Pass preprocessor definitions
+    add_compile_definitions(USE_OPENCV_STUFF=1)
+else()
+    message(NOTICE "== Not using OpenCV \"stuff\"")
+endif()
 
 
 # Add main.cpp to the executable
@@ -78,9 +94,12 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/gsubmods)
 
 
-# Get the (global) lbiraries we're using
+# Get the (global) libraries we're using
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenCL::OpenCL)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
+# If we're using OpenCV stuff
+if(USE_OPENCV_STUFF)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
+endif()
 
 
 # C++23 gives us some nice features
@@ -90,7 +109,7 @@ set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 23)
 
 # Define this behaviour
 # Note that the program will still compile in GCC 11, even if it is missing some C++23 features
-# But, for example using GCC 11.4.0, this produces an error when targeting C++26 where using GCC 14.0.1-experimental everything is dandy
+# But, for example using GCC 11.4.0, this produces an error when targeting C++26 where using GCC 14.0.1-experimental everything is fine
 # So, whilst this statement isn't a fool-proof way of checking the user has a compatible compiler,
 # it should at least give erros in extreme cases when the compiler is many versions behind
 set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)

@@ -45,17 +45,33 @@ clean-debug-and-run: clean debug-and-run
 # Utilities related to our config file
 config-make:
     # -e checks if that path exists at all (i.e. could be block device, dir etc.)
-	if [ ! -e ./config.cmake ]; then                                   \
-		cp config_global.cmake config.cmake;                           \
+	if [ ! -e ./config_local.cmake ]; then                             \
+	    cp config_global.cmake config_local.cmake;                     \
         echo "= Local config file created";                            \
 	else                                                               \
-		echo "= Local config file already exists, will not overwrite"; \
-		echo "    = To re-create use \`make config-remake\`";          \
+	    echo "= Local config file already exists, will not overwrite"; \
+	    echo "    = To re-create use \`make config-remake\`";          \
 	fi
 
 config-rm:
     # We only want to remove our local config if it's a file
-	if [ -f "./config.cmake" ]; then rm ./config.cmake && echo "= Local config file removed"; fi
+	if [ -f "./config_local.cmake" ]; then rm ./config_local.cmake && echo "= Local config file removed"; fi
+
+config-diff:
+    # We need for the local config to exist for this
+	if [ -f "./config_local.cmake" ]; then                                                      \
+	    diff ./config_local.cmake --to-file=config_global.cmake -y --suppress-common-lines;     \
+		DIF=$$?; # Store the output of diff                                                     \
+	    if [ $$DIF -eq 1 ]; then echo "= Local conig (left) is different to the global config"; \
+	    elif [ $$DIF -eq 0 ]; then echo "= Local and global config files are identical";        \
+	    else echo "= Diff encountered an error! $$DIF";                                         \
+	    fi                                                                                      \
+	else                                                                                        \
+	    echo "= Local config does not exist";                                                   \
+	fi
 
 # A command to remake our config file
 config-remake: config-rm config-make
+
+# An alias
+config-local: config-make
