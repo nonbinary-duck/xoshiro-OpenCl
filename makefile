@@ -1,8 +1,12 @@
 # We use bash here
 SHELL := /bin/bash
 
-# Store the name of our project
+# Store the name of our project (so it can be easily edited)
 prjName = xoshiro-opencl
+
+# We don't want make to print our enormous commands
+# Taken from this stack overflow answer: https://stackoverflow.com/a/11015111
+.SILENT:
 
 # Default option
 release:
@@ -62,8 +66,8 @@ config-diff:
 	if [ -f "./config_local.cmake" ]; then                                                      \
 	    diff ./config_local.cmake --to-file=config_global.cmake -y --suppress-common-lines;     \
 		DIF=$$?; # Store the output of diff                                                     \
-	    if [ $$DIF -eq 1 ]; then echo "= Local conig (left) is different to the global config"; \
-	    elif [ $$DIF -eq 0 ]; then echo "= Local and global config files are identical";        \
+	    if [ $$DIF -eq 1 ]; then printf "\n= Local config (left) is different to the global config\n"; \
+	    elif [ $$DIF -eq 0 ]; then echo "= Local and global config files are identical\n";        \
 	    else echo "= Diff encountered an error! $$DIF";                                         \
 	    fi                                                                                      \
 	else                                                                                        \
@@ -75,3 +79,8 @@ config-remake: config-rm config-make
 
 # An alias
 config-local: config-make
+
+
+help:
+    # A command to list various commands in this makefile
+	printf "Build automation system help menu:\n  Usage: \`make [GNU Make options] [target]\`\n    Executing without [target] is equivalent to \`make release\`\n    Append \`--dry-run\` to inspect what a target will execute\n  Available targets:\n    release:               Build a release version of this project\n    debug: - - - - - - - - Build a debug version\n    only-run-release:      Attempt to execute an already built release executable\n    only-run-debug: - - -  Attempt to execute a debug build's binary\n    release-and-run:       Perform a release build and execute the binary\n    debug-and-run: - - - - Perform a debug build and execute the binary\n    clean:                 Remove all build-related files (i.e. both debug and release)\n    clean-release: - - - - Remove ALL build-related files, then perform a release build\n    clean-debug:           Remove ALL build-related files, then perform a debug build\n    clean-release-and-run: Clean all, build release and run\n    clean-debug-and-run:   Clean all, build debug and run\n    config-make: - - - - - Makes an un-tracked copy of the global config included by the CMake file\n    config-local:          Alias for \`config-make\`\n    config-rm: - - - - - - Removes the local config\n    config-remake:         Executes \`config-rm\` then \`config-make\`\n    config-diff: - - - - - Displays differences between local and global config file\nExecute \`make --help\` for GNU Make options\n"
