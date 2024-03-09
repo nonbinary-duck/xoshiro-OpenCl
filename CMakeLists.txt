@@ -94,10 +94,9 @@ endif()
 # Find our libraries
 find_package(OpenCL REQUIRED)
 
-
 # If we're using OpenCV
 if(USE_OPENCV_STUFF)
-    message(NOTICE "== Using OpenCV \"stuff\"")
+    message(NOTICE "== Using OpenCV stuff")
     
     # Find that library
     find_package(OpenCV REQUIRED)
@@ -105,9 +104,21 @@ if(USE_OPENCV_STUFF)
     # Pass preprocessor definitions
     add_compile_definitions(USE_OPENCV_STUFF=1)
 else()
-    message(NOTICE "== Not using OpenCV \"stuff\"")
+    message(NOTICE "== Not using OpenCV stuff")
 endif()
 
+# Preprocessor definitions RE: online kernels
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if (DEBUG_PRINT_OPENCL_ONLINE_BUILD_LOGS)
+        add_compile_definitions(PRINT_OCL_ONLINE_LOGS=1)
+        message(NOTICE "== Defined (for preprocessor) PRINT_OCL_ONLINE_LOGS=1")
+    endif()
+else()
+    if (RELEASE_PRINT_OPENCL_ONLINE_BUILD_LOGS)
+        add_compile_definitions(PRINT_OCL_ONLINE_LOGS=1)
+        message(NOTICE "== Defined (for preprocessor) PRINT_OCL_ONLINE_LOGS=1")
+    endif()
+endif()
 
 # Add main.cpp to the executable
 add_executable(${PROJ_NAME} main.cpp)

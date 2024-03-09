@@ -1,38 +1,38 @@
+#include <stdexcept>
 #include <algorithm>
 #include <iostream>
 #include <vector>
 #include <vector>
 #include <memory>
 
+#define CL_HPP_ENABLE_EXCEPTIONS
+#define CL_HPP_TARGET_OPENCL_VERSION 200
 
-// 
+#include <CL/opencl.hpp>
+
+// What prefix to use for incbin
 #define INCBIN_PREFIX gFile_
 #include "gsubmods/incbin/incbin.h"
 
 using std::cout, std::cin, std::endl;
 
+// Include our utils
 #include "src/utils.hpp"
+#include "src/opencl_utils.hpp"
+
+using utils::tuchar;
 
 
 // Use incbin to include our kernel files in our binary
 INCTXT(test_kernel, "./build_resources/kernels/test_kernel.cl");
 INCTXT(xoshiro_kernel, "./build_resources/kernels/xoshiro256**.cl");
 
-#define CL_HPP_ENABLE_EXCEPTIONS
-#define CL_HPP_TARGET_OPENCL_VERSION 200
-
-#include <CL/opencl.hpp>
-
-
-#include "src/utils.hpp"
-
-using utils::tuchar;
-
 const int numElements = 32;
 
 
+
 /**
- * @brief Called when the program is launched
+ * @brief The main function of our executable
  * 
  * @param argc Count of command-line arguments
  * @param argv Args, zero is the name of the program
@@ -40,59 +40,71 @@ const int numElements = 32;
  */
 int main(int argc, char *argv[])
 {
-	cout << "Hello, world!! I'm xoshiro-opencl :)" << endl;
+	// Much of this is code is taken or expanded from the example in CL/opencl.hpp
 
-	cout << gFile_test_kernelData << endl;
+	// Get the available platforms
+	auto *platforms = ocl_utils::find_opencl_2_3_platforms();
 
-	// Much of this is code is taken from the example in CL/opencl.hpp
-	// Filter for a 2.0 or newer platform and set it as the default
-	std::vector<cl::Platform> platforms;
-	// Get available platforms
-	cl::Platform::get(&platforms);
-	// Where to store a selected platform 
-	cl::Platform plat;
-
-	// Loop over our platforms
-	for (auto &p : platforms)
-	{
-		// Get this platforms' opencl version
-		std::string platVer = p.getInfo<CL_PLATFORM_VERSION>();
-
-		// Select it if we find a platform of version 2.* or 3.*
-		if (platVer.find("OpenCL 2.") != std::string::npos || platVer.find("OpenCL 3.") != std::string::npos)
-		{
-			// Note: an OpenCL 3.x platform may not support all required features!
-			plat = p;
-
-			// Give some details about the platform and don't flush the buffer yet
-			std::cout << "Found an OpenCL platform: " << p.getInfo<CL_PLATFORM_NAME>() << ' ' << platVer << p.getInfo<CL_PLATFORM_PROFILE>() << ' ' << p.getInfo<CL_PLATFORM_VENDOR>() << '\n';
-		}
-	}
-
+	
 	// Check if we've found a platform or no
-	if (plat() == 0)
+	if (platforms->size() < 1)
 	{
-		std::cerr << "No OpenCL 2.0 or newer platform found" << endl;
-		return -1;
+		delete platforms;
+		throw std::runtime_error("ERROR: No OpenCL 2.0 or newer platform found");
 	}
 
 	// "Modify the default platform to be used by subsequent operations"
-	cl::Platform newP = cl::Platform::setDefault(plat);
+	cl::Platform plat = cl::Platform::setDefault(platforms->at(0));
 	// Check if we've set the default platform successfully
-	if (newP != plat)
+	if (plat != platforms->at(0))
 	{
-		std::cerr << "Error setting default platform" << endl;
-		return -1;
+		delete platforms;
+		throw std::runtime_error("ERROR: Cannot set default platform");
 	}
 	else
 	{
-		std::cout << "Now using " << newP.getInfo<CL_PLATFORM_NAME>() << " platform" << endl;
+		// We no longer need a list of platforms
+		delete platforms;
+		std::cout << "Now using " << plat.getInfo<CL_PLATFORM_NAME>() << " platform" << endl;
 	}
+
+	// Make a vector to store our kernel source in
+	// The source for these kernels come from the start of the file where we include the files in the binary
+	const std::vector<std::string> kernelSource = { gFile_test_kernelData, gFile_xoshiro_kernelData };
+
+	// Build our program!
+	auto programOut = ocl_utils::buildKernel( kernelSource );
+	cl::Program *program;
+	cl::BuildLogType log;
+
+	// If we've received a program or a build log (i.e. an error happened)
+	// This works because true==1, so if we changed the order of the output of ocl_utils::buildKernel, this would have to change too
+	if (programOut.index())
+	{
+		// Print a log if we get a build error
+		throw std::runtime_error("Failed to build program. Log:\n" + ocl_utils::printBuildLog( std::get<cl::BuildLogType>(programOut) ));
+	}
+	else
+	{
+		// Otherwise, get our program and the log
+		std::tie( program, log ) = std::get< ocl_utils::program_log_pair >(programOut);
+
+		// If we want to always print the logs, do that
+		#ifdef PRINT_OCL_ONLINE_LOGS
+			cout << "Online build success. Log:\n" << ocl_utils::printBuildLog( std::get<cl::BuildLogType>(programOut) ) << endl;
+		#endif
+	}
+
+	// cout << program.index() << endl;
+	// cout << program << endl;
 
 
 	#if USE_OPENCV_STUFF
 		
 	#endif
 	
+	// Clean up
+	delete program;
+
 	return 0;
 }

@@ -1,6 +1,3 @@
-#pragma once
-#ifndef CL_360679_KERNELS_XOSHIRO256
-#define CL_360679_KERNELS_XOSHIRO256 1
 
 /**
  * Code migrated, merged, commented and edited from https://prng.di.unimi.it/ which links to https://prng.di.unimi.it/xoshiro256starstar.c
@@ -23,9 +20,8 @@
  * @brief A left circular shift, beforming a left bit-shift according
  *     to k wherin the leftmost bit(s) "loops" around to the right
  * @note See: https://en.wikipedia.org/wiki/Circular_shift#Example
- *     It's unclear if static does anything here
  */
-static inline ulong xoshiro256stst_rotl(const ulong x, uint k)
+inline ulong xoshiro256stst_rotl(const ulong x, uint k)
 {
 	return (x << k) | (x >> (64 - k));
 }
@@ -39,7 +35,7 @@ void xoshiro256stst_jump(ulong4 *s);
  * @param seed The seed to initalise it
  * @return ulong4 A state
  */
-static inline ulong4 xoshiro256stst_init(const ulong seed)
+inline ulong4 xoshiro256stst_init(const ulong seed)
 {
 	// Initalise a simple state
 	ulong4 state = (ulong4)(
@@ -225,4 +221,3 @@ inline void xoshiro256stst_long_jump(ulong4 *s)
 	// s->w = s3;
 }
 
-#endif // End CL_360679_KERNELS_XOSHIRO256

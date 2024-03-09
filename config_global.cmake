@@ -7,7 +7,17 @@
 # Then the user can use `make config-diff` to determine what has changed from their local version
 # Only update this in the local config when new changes in the global config have been manually merged
 # Setting to a version above the global config won't generate a warning, but there is a notice
-set(CONFIG_VERSION "1.1")
+set(CONFIG_VERSION "1.2.0")
+
+#
+# Program Settings
+#
+
+# If we should print build logs at runtime in the release program
+set(RELEASE_PRINT_OPENCL_ONLINE_BUILD_LOGS FALSE)
+
+# If we should print build logs at runtime in the debug program
+set(DEBUG_PRINT_OPENCL_ONLINE_BUILD_LOGS TRUE)
 
 # 
 # Optimisation Settings
