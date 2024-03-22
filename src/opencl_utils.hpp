@@ -105,7 +105,7 @@ namespace ocl_utils
 
         // Return the program if we've built successfully
         cl_int buildErr = CL_SUCCESS;
-        return ( program, program->getBuildInfo<CL_PROGRAM_BUILD_LOG>(&buildErr) );
+        return (program_log_pair){ program, program->getBuildInfo<CL_PROGRAM_BUILD_LOG>(&buildErr) };
     }
 
     inline std::string printBuildLog(const cl::BuildLogType &logs) noexcept

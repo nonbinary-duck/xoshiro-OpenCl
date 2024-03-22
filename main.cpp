@@ -77,22 +77,21 @@ int main(int argc, char *argv[])
 	cl::Program *program;
 	cl::BuildLogType log;
 
-	// If we've received a program or a build log (i.e. an error happened)
-	// This works because true==1, so if we changed the order of the output of ocl_utils::buildKernel, this would have to change too
-	if (programOut.index())
-	{
-		// Print a log if we get a build error
-		throw std::runtime_error("Failed to build program. Log:\n" + ocl_utils::printBuildLog( std::get<cl::BuildLogType>(programOut) ));
-	}
-	else
+	// Check if we've built the program without issue
+	if (std::holds_alternative<ocl_utils::program_log_pair>(programOut))
 	{
 		// Otherwise, get our program and the log
 		std::tie( program, log ) = std::get< ocl_utils::program_log_pair >(programOut);
 
 		// If we want to always print the logs, do that
-		#ifdef PRINT_OCL_ONLINE_LOGS
-			cout << "Online build success. Log:\n" << ocl_utils::printBuildLog( std::get<cl::BuildLogType>(programOut) ) << endl;
+		#if PRINT_OCL_ONLINE_LOGS
+			cout << "Online build success. Log:\n" << ocl_utils::printBuildLog( log ) << endl;
 		#endif
+	}
+	else
+	{
+		// Print a log if we get a build error
+		throw std::runtime_error("Failed to build program. Log:\n" + ocl_utils::printBuildLog( std::get<cl::BuildLogType>(programOut) ));
 	}
 
 	// cout << program.index() << endl;

@@ -110,13 +110,19 @@ endif()
 # Preprocessor definitions RE: online kernels
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     if (DEBUG_PRINT_OPENCL_ONLINE_BUILD_LOGS)
+
         add_compile_definitions(PRINT_OCL_ONLINE_LOGS=1)
+
         message(NOTICE "== Defined (for preprocessor) PRINT_OCL_ONLINE_LOGS=1")
+
     endif()
 else()
     if (RELEASE_PRINT_OPENCL_ONLINE_BUILD_LOGS)
+
         add_compile_definitions(PRINT_OCL_ONLINE_LOGS=1)
+
         message(NOTICE "== Defined (for preprocessor) PRINT_OCL_ONLINE_LOGS=1")
+
     endif()
 endif()
 
